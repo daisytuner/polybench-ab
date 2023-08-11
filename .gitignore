@@ -1,3 +1,6 @@
+.daisycache/
+.dacecache/
+
 # Prerequisites
 *.d
 

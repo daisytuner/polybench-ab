@@ -16,7 +16,7 @@
  *
  * Optionally, one can define:
  *
- * -DPOLYBENCH_TIME, to report the execution time,
+ * -DPOLYBENCH_TIME -DPOLYBENCH_USE_RESTRICT, to report the execution time,
  *   OR (exclusive):
  * -DPOLYBENCH_PAPI, to use PAPI H/W counters (defined in polybench.c)
  *
