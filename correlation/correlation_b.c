@@ -76,26 +76,25 @@ void kernel_correlation(int m, int n,
 
 
 #pragma scop
-  for (j = 0; j < _PB_M; j++){
-    mean[j] = SCALAR_VAL(0.0);
-  }
-  for (i = 0; i < _PB_N; i++) {
-    for (j = 0; j < _PB_M; j++){ 
-      mean[j] += data[i][j];
+  for (j = 0; j < _PB_M; j++)
+    {
+      mean[j] = SCALAR_VAL(0.0);
     }
-  }
-  for (j = 0; j < _PB_M; j++){
-    mean[j] /= float_n;
-  }
+    for (i = 0; i < _PB_N; i++) {
+      for (j = 0; j < _PB_M; j++) {
+	      mean[j] += data[i][j];
+      }
+    }
+    for (j = 0; j < _PB_M; j++){
+      mean[j] /= float_n;
+    }
 
-  for (j = 0; j < _PB_M; j++) {
-    stddev[j] = SCALAR_VAL(0.0);
-  }
-  for (i = 0; i < _PB_N; i++)
-    for (j = 0; j < _PB_M; j++) {
-      stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
-   }
-   for (j = 0; j < _PB_M; j++) {
+
+   for (j = 0; j < _PB_M; j++)
+    {
+      stddev[j] = SCALAR_VAL(0.0);
+      for (i = 0; i < _PB_N; i++)
+        stddev[j] += (data[i][j] - mean[j]) * (data[i][j] - mean[j]);
       stddev[j] /= float_n;
       stddev[j] = SQRT_FUN(stddev[j]);
       /* The following in an inelegant but usual way to handle
@@ -105,8 +104,8 @@ void kernel_correlation(int m, int n,
     }
 
   /* Center and reduce the column vectors. */
-  for (j = 0; j < _PB_M; j++)
-    for (i = 0; i < _PB_N; i++)
+  for (i = 0; i < _PB_N; i++)
+    for (j = 0; j < _PB_M; j++)
       {
         data[i][j] -= mean[j];
         data[i][j] /= SQRT_FUN(float_n) * stddev[j];
@@ -116,8 +115,6 @@ void kernel_correlation(int m, int n,
   for (i = 0; i < _PB_M-1; i++)
     {
       corr[i][i] = SCALAR_VAL(1.0);
-    }
-  for (i = 0; i < _PB_M-1; i++){
       for (j = i+1; j < _PB_M; j++)
         {
           corr[i][j] = SCALAR_VAL(0.0);
